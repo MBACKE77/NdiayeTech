@@ -1,0 +1,120 @@
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NDIAYE-TECH - Agence Web</title>
+    <meta name="description" content="NDIAYE-TECH - Conception et réalisation de sites Web" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a href="#" class="logo">
+          <img src="logo.png" alt="NDIAYE-TECH" />
+        </a>
+        <nav>
+          <a href="#services">Services</a>
+          <a href="#portfolio">Portfolio</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="container hero-content">
+          <h1>NDIAYE-TECH</h1>
+          <p>Création de plateformes numériques, conception, développement et réalisation de site Web.</p>
+          <a class="btn btn-primary" href="#contact">Demander un devis</a>
+        </div>
+      </section>
+
+      <section id="services" class="section services">
+        <div class="container">
+          <h2>Nos services</h2>
+          <div class="grid cards">
+            <article class="card">
+              <h3>Conception UX/UI</h3>
+              <p>Maquettes modernes et expérience utilisateur optimisée pour convertir vos visiteurs.</p>
+            </article>
+            <article class="card">
+              <h3>Développement Front-end</h3>
+              <p>HTML/CSS/JS réactif, performance mobile et animation fluide.</p>
+            </article>
+            <article class="card">
+              <h3>Développement Back-end</h3>
+              <p>API sécurisées, CMS, base de données et déploiement scalable.</p>
+            </article>
+            <article class="card">
+              <h3>Maintenance & Hébergement</h3>
+              <p>Supervision, sauvegarde et support continu pour vos projets en production.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="portfolio" class="section portfolio">
+        <div class="container">
+          <h2>Portfolio</h2>
+          <div class="grid cards">
+            <article class="card">
+              <h3>Site e-commerce</h3>
+              <p>Design personnalisé + CMS pour boutique en ligne.</p>
+            </article>
+            <article class="card">
+              <h3>Landing page marketing</h3>
+              <p>Optimisée pour acquisition de leads.</p>
+            </article>
+            <article class="card">
+              <h3>Application web SaaS</h3>
+              <p>Dashboard d'administration et API métiers.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="container">
+          <h2>Contact</h2>
+          <p>Besoin d’un site sur mesure ? Parlons-en.</p>
+          <form id="contactForm" class="form" autocomplete="off">
+            <div class="form-grid">
+              <input type="text" id="name" required placeholder="Votre nom*" />
+              <input type="email" id="email" required placeholder="Votre email*" />
+              <input type="text" id="subject" placeholder="Sujet" />
+              <textarea id="message" rows="5" required placeholder="Message*"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h3>NDIAYE-TECH</h3>
+          <p>Création de site, développement web & maintenance.</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>Email : sn871510@gmail.com</p>
+          <p>Téléphone : +221 772198512</p>
+        </div>
+        <div>
+          <h4>Réseaux</h4>
+          <p><a href="#">LinkedIn</a> • <a href="#">Facebook</a></p>
+        </div>
+      </div>
+      <p class="copyright">© 2026 NDIAYE-TECH. Tous droits réservés.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
