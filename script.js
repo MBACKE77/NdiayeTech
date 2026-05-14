@@ -9,6 +9,10 @@ window.addEventListener('scroll', () => {
       el.style.opacity = 1;
       el.style.transform = "translateY(0)";
     }
+    .custom-logo {
+    max-height: 70px;
+    width: auto;
+}
     const chatToggle = document.getElementById("chatToggle");
 const chatbox = document.getElementById("chatbox");
 const closeChat = document.getElementById("closeChat");
