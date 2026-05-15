@@ -1,196 +1,1098 @@
+
 <!doctype html>
-<script src="script.js"></script>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NDIAYE-TECH - Agence Web</title>
-  <meta name="description" content="NDIAYE-TECH - Conception et réalisation de sites Web">
-  
-  <!-- Fonts -->
+  <meta name="description" content="NDIAYE-TECH - Conception et réalisation de sites Web au Sénégal">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:       #080818;
+      --bg2:      #0e0e24;
+      --bg3:      #14142e;
+      --card:     #111128;
+      --border:   #1e1e42;
+      --border2:  #2a2a55;
+      --accent:   #00d4ff;
+      --accent2:  #6c63ff;
+      --accent3:  #a78bfa;
+      --text:     #e8eaf0;
+      --muted:    #8892a4;
+      --dim:      #4a5168;
+      --success:  #10b981;
+      --danger:   #f43f5e;
+      --warn:     #f59e0b;
+      --radius:   12px;
+      --radius-lg:18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+    /* ── LOADER ── */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+      transition: opacity .5s ease, visibility .5s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem; font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .loader-bar {
+      width: 160px; height: 3px; background: var(--border);
+      border-radius: 2px; overflow: hidden;
+    }
+    .loader-fill {
+      height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px; animation: load 1.4s ease forwards;
+    }
+    @keyframes load { to { width: 100%; } }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      background: rgba(8,8,24,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      height: 64px;
+      display: flex; align-items: center;
+      padding: 0 2rem;
+      gap: 1.5rem;
+    }
+    .logo-container {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: inherit;
+    }
+    .logo-box {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', sans-serif; font-weight: 900;
+      font-size: 13px; color: #fff; flex-shrink: 0;
+    }
+    .logo-text {
+      font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 15px;
+      background: linear-gradient(90deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-nav { display: flex; gap: 1.75rem; align-items: center; margin-left: auto; }
+    .header-nav a {
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      transition: color .2s; letter-spacing: .02em;
+    }
+    .header-nav a:hover { color: var(--accent); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff !important;
+      padding: 8px 18px; border-radius: 8px; font-size: 13px !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+
+    /* Lang switcher */
+    .lang-switcher {
+      display: flex; gap: 3px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 3px;
+    }
+    .lang-btn {
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: .05em;
+      cursor: pointer; border: none;
+      background: transparent; color: var(--muted);
+      transition: all .2s;
+    }
+    .lang-btn.active { background: var(--accent2); color: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    /* Dot grid background */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(108,99,255,.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    /* Glow */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,.07) 0%, transparent 65%);
+      top: 50%; left: 50%; transform: translate(-50%,-55%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 680px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(108,99,255,.12);
+      border: 1px solid rgba(108,99,255,.3);
+      color: var(--accent3);
+      padding: 6px 16px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; letter-spacing: .04em;
+      margin-bottom: 1.5rem;
+      animation: fadeDown .6s ease both;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 1rem;
+      animation: fadeDown .7s .08s ease both;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 480px; margin: 0 auto 2.5rem;
+      animation: fadeDown .8s .14s ease both;
+    }
+    .hero-btns {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeDown .9s .2s ease both;
+    }
+    .btn {
+      padding: 13px 28px; border-radius: var(--radius);
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      border: none; transition: all .22s; display: inline-flex;
+      align-items: center; gap: 8px; font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(108,99,255,.38);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,99,255,.52); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border2); color: var(--text);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Floating particles */
+    .particle {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; opacity: 0;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0)   rotate(0deg);   opacity: 0; }
+      10%  { opacity: .6; }
+      90%  { opacity: .3; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── STATS ── */
+    .stats-strip {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 0;
+    }
+    .stat-item {
+      padding: 2rem 1rem; text-align: center;
+      border-right: 1px solid var(--border);
+      opacity: 0; transform: translateY(16px);
+      transition: all .5s ease;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item.vis { opacity: 1; transform: translateY(0); }
+    .stat-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem; font-weight: 900;
+      color: var(--accent); display: block; line-height: 1;
+    }
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 600; letter-spacing: .03em; }
+
+    /* ── SECTION BASE ── */
+    .section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-header h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700; margin-bottom: .6rem;
+    }
+    .section-header p { color: var(--muted); max-width: 480px; margin: 0 auto; font-size: .95rem; }
+    .accent-bar {
+      width: 40px; height: 3px; margin: .8rem auto 0;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+    }
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(167,139,250,.12);
+      border: 1px solid rgba(167,139,250,.3);
+      color: var(--accent3);
+      font-size: 11px; font-weight: 700; letter-spacing: .04em;
+      padding: 3px 10px; border-radius: 20px; vertical-align: middle;
+      margin-left: 8px;
+    }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.vis { opacity: 1; transform: translateY(0); }
+
+    /* ── CARDS GRID ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 1.25rem; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.75rem;
+      transition: all .3s ease; position: relative; overflow: hidden;
+    }
+    .card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(108,99,255,.06), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover { border-color: var(--accent2); transform: translateY(-4px); }
+    .card:hover::after { opacity: 1; }
+    .card-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── PORTFOLIO ── */
+    .portfolio-card img {
+      width: 100%; height: 150px; object-fit: cover;
+      border-radius: 8px; margin-bottom: 1rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: .75rem; }
+    .tag {
+      display: inline-block;
+      background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.18);
+      color: var(--accent); font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; letter-spacing: .02em;
+    }
+
+    /* ── TÉMOIGNAGES ── */
+    .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1.25rem; }
+    .testi {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      position: relative;
+    }
+    .testi::before {
+      content: '"'; position: absolute; top: 8px; left: 16px;
+      font-size: 4rem; line-height: 1;
+      color: var(--accent2); opacity: .2;
+      font-family: Georgia, serif;
+    }
+    .stars { color: var(--warn); font-size: 12px; margin-bottom: .5rem; }
+    .testi p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: .75rem; padding-top: .25rem; }
+    .testi cite { font-size: 12px; font-weight: 700; color: var(--accent3); font-style: normal; }
+
+    /* ── DEVIS / AI ── */
+    .devis-wrap { max-width: 720px; margin: 0 auto; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.full-row { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 11px 14px;
+      color: var(--text); font-size: 14px; font-family: inherit;
+      outline: none; transition: border .2s;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--accent2); }
+    .form-group select option { background: var(--bg3); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .checkboxes { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0; }
+    .cb-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--muted); cursor: pointer;
+      padding: 6px 12px; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 8px;
+      transition: all .2s;
+    }
+    .cb-label:has(input:checked) { border-color: var(--accent2); color: var(--accent3); background: rgba(108,99,255,.1); }
+    .cb-label input { accent-color: var(--accent2); }
+
+    /* Devis result box */
+    .devis-result {
+      background: var(--bg3); border: 1px solid rgba(0,212,255,.22);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      margin-top: 1.5rem; display: none;
+    }
+    .devis-result.show { display: block; animation: fadeDown .4s ease; }
+    .devis-row {
+      display: flex; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .devis-row:last-of-type { border: none; }
+    .devis-row .label { color: var(--muted); }
+    .devis-total {
+      margin-top: 1rem; text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--accent);
+    }
+    .devis-sub { font-size: 11px; color: var(--dim); text-align: center; margin-top: 4px; }
+
+    /* AI analysis */
+    .ai-box {
+      background: var(--bg3);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.1rem 1.25rem; margin-top: 1rem;
+      font-size: 13px; line-height: 1.75; color: var(--muted);
+      display: none;
+    }
+    .ai-box.show { display: block; animation: fadeDown .4s ease; }
+    .ai-box-tag {
+      display: inline-block;
+      background: rgba(108,99,255,.15); color: var(--accent3);
+      font-size: 10px; font-weight: 700; letter-spacing: .05em;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: .5rem;
+    }
+    .ai-typing { display: inline-block; }
+    .ai-typing::after {
+      content: '▋';
+      animation: blink .7s step-end infinite;
+      color: var(--accent2);
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── CONTACT ── */
+    .contact-wrap { max-width: 640px; margin: 0 auto; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .contact-grid .full { grid-column: 1 / -1; }
+    .input-wrap input,
+    .input-wrap textarea,
+    .input-wrap select {
+      width: 100%; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 16px; color: var(--text);
+      font-size: 14px; font-family: inherit; outline: none;
+      transition: border .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .input-wrap input:focus,
+    .input-wrap textarea:focus,
+    .input-wrap select:focus {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(108,99,255,.12);
+    }
+    .input-wrap textarea { resize: vertical; min-height: 120px; }
+    .feedback { font-size: 13px; margin-top: .5rem; min-height: 20px; }
+    .feedback.ok { color: var(--success); }
+    .feedback.err { color: var(--danger); }
+
+    /* ── CHATBOT ── */
+    .chatbot-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 800; }
+    .chat-toggle {
+      width: 58px; height: 58px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border: none; cursor: pointer; font-size: 22px;
+      box-shadow: 0 4px 24px rgba(108,99,255,.5);
+      transition: transform .2s; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .chat-toggle:hover { transform: scale(1.08); }
+    .chat-window {
+      position: fixed; bottom: 96px; right: 24px;
+      width: 360px; height: 500px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      display: none; flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0,0,0,.6);
+    }
+    .chat-window.open { display: flex; animation: fadeUp .3s ease; }
+    .chat-head {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px;
+    }
+    .chat-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .chat-head-info { flex: 1; }
+    .chat-head-name { font-weight: 700; font-size: 14px; }
+    .chat-head-status { font-size: 11px; opacity: .8; }
+    .chat-close-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 18px; opacity: .7; }
+    .chat-close-btn:hover { opacity: 1; }
+    .chat-msgs {
+      flex: 1; overflow-y: auto; padding: 1rem;
+      display: flex; flex-direction: column; gap: .6rem;
+    }
+    .chat-msgs::-webkit-scrollbar { width: 3px; }
+    .chat-msgs::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .msg {
+      max-width: 82%; padding: 10px 14px; border-radius: 12px;
+      font-size: 13px; line-height: 1.5; animation: fadeUp .25s ease;
+    }
+    .msg.bot { background: var(--bg3); color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; }
+    .msg.user { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .typing-dots { display: flex; gap: 4px; align-items: center; padding: 2px 0; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: bounce .8s ease infinite; }
+    .dot:nth-child(2) { animation-delay: .15s; }
+    .dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .quick-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 1rem .75rem; }
+    .chip {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted); font-size: 11px; padding: 5px 10px;
+      border-radius: 20px; cursor: pointer; transition: all .2s; font-family: inherit;
+    }
+    .chip:hover { border-color: var(--accent2); color: var(--accent3); }
+    .chat-input-row {
+      padding: .75rem; border-top: 1px solid var(--border);
+      display: flex; gap: 8px;
+    }
+    .chat-input-row input {
+      flex: 1; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 13px; color: var(--text);
+      font-size: 13px; font-family: inherit; outline: none;
+    }
+    .chat-input-row input:focus { border-color: var(--accent2); }
+    .chat-send {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: var(--accent2); border: none; color: #fff;
+      cursor: pointer; font-size: 16px; flex-shrink: 0;
+      transition: background .2s;
+    }
+    .chat-send:hover { background: var(--accent3); }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 3.5rem 2rem 2rem;
+    }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 2rem; margin-bottom: 2.5rem; }
+    .footer-grid h3 { font-family: 'Orbitron', sans-serif; font-size: .95rem; color: var(--accent); margin-bottom: .75rem; }
+    .footer-grid h4 { font-size: .8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
+    .footer-grid p, .footer-grid a { font-size: 13px; color: var(--dim); line-height: 1.9; display: block; }
+    .footer-grid a:hover { color: var(--accent); }
+    .copyright { text-align: center; font-size: 12px; color: var(--dim); padding-top: 2rem; border-top: 1px solid var(--border); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-14px) } to { opacity:1; transform:translateY(0) } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(10px)  } to { opacity:1; transform:translateY(0) } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-grid .full { grid-column: 1; }
+      .chat-window { width: calc(100vw - 32px); right: 16px; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- HEADER -->
- <header class="site-header">
-  <div class="container">
-
-    <a href="index.html" class="logo-container">
-     <img src="logo.svg" alt="Logo NDIAYE-TECH" class="logo">
-      <span class="logo-text">NDIAYE-TECH</span>
-    </a>
-
-    <nav>
-      <a href="#services">Services</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-  </div>
-</header>
-  <!-- HERO -->
-  <main>
-    <section class="hero" id="home">
-      <div class="container hero-content">
-        <h1>NDIAYE-TECH</h1>
-        <p>Création de plateformes numériques, conception, développement et réalisation de site Web.</p>
-        <a class="btn btn-primary" href="#contact">Demander un devis</a>
-      </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section id="services" class="section services">
-      <div class="container">
-        <h2>Nos services</h2>
-        <div class="grid cards">
-          <article class="card">
-            <div class="icon">🎨</div>
-            <h3>Conception UX/UI</h3>
-            <p>Maquettes modernes et expérience utilisateur optimisée pour convertir vos visiteurs.</p>
-          </article>
-          <article class="card">
-            <div class="icon">💻</div>
-            <h3>Développement Front-end</h3>
-            <p>HTML/CSS/JS réactif, performance mobile et animation fluide.</p>
-          </article>
-          <article class="card">
-            <div class="icon">⚙️</div>
-            <h3>Développement Back-end</h3>
-            <p>API sécurisées, CMS, base de données et déploiement scalable.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🛠️</div>
-            <h3>Maintenance & Hébergement</h3>
-            <p>Supervision, sauvegarde et support continu pour vos projets en production.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-    <div class="particles"></div>
-    <!-- CHATBOT -->
-<div class="chatbot-container">
-  
-  <button class="chat-toggle" id="chatToggle">
-    💬
-  </button>
-
-  <div class="chatbox" id="chatbox">
-    
-    <div class="chat-header">
-      <h3>NDIAYE-TECH Assistant</h3>
-      <span id="closeChat">✖</span>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-      <div class="bot-message">
-        Bonjour 👋  
-        Comment puis-je vous aider ?
-      </div>
-    </div>
-
-    <div class="chat-footer">
-      <input type="text" id="userInput" placeholder="Écrivez un message...">
-      <button id="sendBtn">Envoyer</button>
-    </div>
-
-  </div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">NDIAYE-TECH</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
-<a href="https://wa.me/221772198512" class="whatsapp-btn">
-  WhatsApp
-</a>
-<script src="https://unpkg.com/scrollreveal"></script>
-<div class="particles"></div>
 
-    <!-- PORTFOLIO -->
-    <section id="portfolio" class="section portfolio">
-      <div class="container">
-        <h2>Portfolio</h2>
-        <div class="grid cards">
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Site e-commerce">
-            <h3>Site e-commerce</h3>
-            <p>Design personnalisé + CMS pour boutique en ligne.</p>
-          </article>
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Landing page marketing">
-            <h3>Landing page marketing</h3>
-            <p>Optimisée pour acquisition de leads.</p>
-          </article>
-          <article class="card">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Application web SaaS">
-            <h3>Application web SaaS</h3>
-            <p>Dashboard d'administration et API métiers.</p>
-          </article>
+<!-- HEADER -->
+<header class="site-header">
+  <a href="index.html" class="logo-container">
+    <div class="logo-box">NT</div>
+    <span class="logo-text">NDIAYE-TECH</span>
+  </a>
+  <nav class="header-nav">
+    <a href="#services">Services</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#devis">Devis IA</a>
+    <a href="#contact">Contact</a>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('fr',this)">FR</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('wo',this)">WO</button>
+    </div>
+    <a href="#devis" class="nav-cta">Devis gratuit</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div id="particles-container"></div>
+  <div class="hero-inner">
+    <div class="hero-badge" id="hero-badge">✦ Agence Web Sénégalaise</div>
+    <h1 id="hero-title">NDIAYE<span>-TECH</span></h1>
+    <p class="hero-sub" id="hero-sub">Création de plateformes numériques, conception, développement et réalisation de site Web.</p>
+    <div class="hero-btns">
+      <a href="#devis" class="btn btn-primary" id="btn-devis-cta">✦ Devis IA gratuit</a>
+      <a href="#portfolio" class="btn btn-outline" id="btn-portfolio-cta">Voir nos projets</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item"><span class="stat-num" id="s1">0</span><div class="stat-lbl" id="sl1">Projets livrés</div></div>
+  <div class="stat-item"><span class="stat-num" id="s2">0</span><div class="stat-lbl" id="sl2">Clients satisfaits</div></div>
+  <div class="stat-item"><span class="stat-num" id="s3">0</span><div class="stat-lbl" id="sl3">Années d'expérience</div></div>
+  <div class="stat-item"><span class="stat-num" id="s4">0</span><div class="stat-lbl" id="sl4">Technologies</div></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <h2 id="t-services">Nos services</h2>
+      <div class="accent-bar"></div>
+      <p id="t-services-p">Des solutions web sur mesure pour votre business</p>
+    </div>
+    <div class="cards-grid reveal">
+      <div class="card"><span class="card-icon">🎨</span><h3 id="s1-t">Conception UX/UI</h3><p id="s1-p">Maquettes modernes et expérience utilisateur optimisée pour convertir vos visiteurs.</p></div>
+      <div class="card"><span class="card-icon">💻</span><h3 id="s2-t">Développement Front-end</h3><p id="s2-p">HTML/CSS/JS réactif, performance mobile et animation fluide.</p></div>
+      <div class="card"><span class="card-icon">⚙️</span><h3 id="s3-t">Développement Back-end</h3><p id="s3-p">API sécurisées, CMS, base de données et déploiement scalable.</p></div>
+      <div class="card"><span class="card-icon">🛠️</span><h3 id="s4-t">Maintenance & Hébergement</h3><p id="s4-p">Supervision, sauvegarde et support continu pour vos projets en production.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="section" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <h2 id="t-portfolio">Portfolio</h2>
+      <div class="accent-bar"></div>
+    </div>
+    <div class="cards-grid reveal">
+      <div class="card portfolio-card">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80" alt="Site e-commerce">
+        <h3>Site e-commerce</h3><p id="p1-p">Design personnalisé + CMS pour boutique en ligne.</p>
+        <div class="tags"><span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">Bootstrap</span></div>
+      </div>
+      <div class="card portfolio-card">
+        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80" alt="Landing page">
+        <h3>Landing page marketing</h3><p id="p2-p">Optimisée pour acquisition de leads.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Tailwind</span></div>
+      </div>
+      <div class="card portfolio-card">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Application web SaaS">
+        <h3>Application web SaaS</h3><p id="p3-p">Dashboard d'administration et API métiers.</p>
+        <div class="tags"><span class="tag">Django</span><span class="tag">PostgreSQL</span><span class="tag">Vue.js</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section id="testimonials" class="section">
+  <div class="section-inner">
+    <div class="section-header reveal"><h2 id="t-testi">Témoignages</h2><div class="accent-bar"></div></div>
+    <div class="testi-grid reveal">
+      <div class="testi"><div class="stars">★★★★★</div><p>"NDIAYE-TECH a transformé notre vision en un site web exceptionnel. Leur expertise est remarquable."</p><cite>— Aminata D., CEO Dakar Store</cite></div>
+      <div class="testi"><div class="stars">★★★★★</div><p>"Service professionnel, délais respectés, et un résultat au-delà de nos attentes."</p><cite>— Ibrahima S., Entrepreneur</cite></div>
+      <div class="testi"><div class="stars">★★★★☆</div><p>"Recommandé pour tous ceux qui cherchent qualité et innovation dans le développement web."</p><cite>— TechDakar, Startup</cite></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVIS IA -->
+<section id="devis" class="section" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <h2 id="t-devis">Générateur de devis <span class="ai-badge">✦ IA</span></h2>
+      <div class="accent-bar"></div>
+      <p id="t-devis-p">Estimation instantanée + analyse IA de votre projet</p>
+    </div>
+    <div class="devis-wrap reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label id="l-type">Type de projet</label>
+          <select id="d-type">
+            <option value="">-- Choisir --</option>
+            <option value="vitrine">Site vitrine</option>
+            <option value="ecommerce">E-commerce</option>
+            <option value="saas">Application web SaaS</option>
+            <option value="mobile">Application mobile</option>
+            <option value="api">API / Back-end</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="l-pages">Nombre de pages</label>
+          <select id="d-pages">
+            <option value="1">1 – 3 pages</option>
+            <option value="2">4 – 10 pages</option>
+            <option value="3">10+ pages</option>
+          </select>
         </div>
       </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section id="testimonials" class="section testimonials">
-      <div class="container">
-        <h2>Témoignages</h2>
-        <div class="grid testimonials-grid">
-          <blockquote class="testimonial">
-            <p>"NDIAYE-TECH a transformé notre vision en un site web exceptionnel. Leur expertise est remarquable."</p>
-            <cite>- Client Satisfait</cite>
-          </blockquote>
-          <blockquote class="testimonial">
-            <p>"Service professionnel, délais respectés, et un résultat au-delà de nos attentes."</p>
-            <cite>- Entreprise Locale</cite>
-          </blockquote>
-          <blockquote class="testimonial">
-            <p>"Recommandé pour tous ceux qui cherchent qualité et innovation dans le développement web."</p>
-            <cite>- Startup Tech</cite>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section contact">
-      <div class="container">
-        <h2>Contact</h2>
-        <p>Besoin d’un site sur mesure ? Parlons-en.</p>
-        <form id="contactForm" class="form" autocomplete="off">
-          <div class="form-grid">
-            <input type="text" id="name" required placeholder="Votre nom*">
-            <input type="email" id="email" required placeholder="Votre email*">
-            <input type="text" id="subject" placeholder="Sujet">
-            <textarea id="message" rows="5" required placeholder="Message*"></textarea>
+      <div class="form-row full-row">
+        <div class="form-group">
+          <label id="l-feats">Fonctionnalités souhaitées</label>
+          <div class="checkboxes">
+            <label class="cb-label"><input type="checkbox" value="auth" class="feat"> Authentification</label>
+            <label class="cb-label"><input type="checkbox" value="payment" class="feat"> Paiement en ligne</label>
+            <label class="cb-label"><input type="checkbox" value="chat" class="feat"> Chat / messagerie</label>
+            <label class="cb-label"><input type="checkbox" value="seo" class="feat"> SEO avancé</label>
+            <label class="cb-label"><input type="checkbox" value="api" class="feat"> API externe</label>
+            <label class="cb-label"><input type="checkbox" value="admin" class="feat"> Dashboard admin</label>
           </div>
-          <button type="submit" class="btn btn-primary">Envoyer</button>
-          <p id="feedback" class="feedback" aria-live="polite"></p>
-        </form>
+        </div>
       </div>
-    </section>
-  </main>
+      <div class="form-row">
+        <div class="form-group">
+          <label id="l-delai">Délai souhaité</label>
+          <select id="d-delai">
+            <option value="urgent">Urgent (&lt; 2 semaines)</option>
+            <option value="normal" selected>Normal (1 mois)</option>
+            <option value="flex">Flexible (2+ mois)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="l-budget">Budget estimé (FCFA)</label>
+          <select id="d-budget">
+            <option value="1">&lt; 200 000</option>
+            <option value="2">200 000 – 500 000</option>
+            <option value="3">500 000 – 1 000 000</option>
+            <option value="4">&gt; 1 000 000</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full-row">
+        <div class="form-group">
+          <label id="l-desc">Décrivez votre projet</label>
+          <textarea id="d-desc" placeholder="Ex: Je veux un site pour vendre mes produits au Sénégal avec paiement Wave / Orange Money…"></textarea>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="genererDevis()" id="btn-gen" style="width:100%">✦ Générer le devis IA</button>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="container footer-grid">
+      <div class="devis-result" id="devis-result">
+        <h3 style="font-size:.95rem;margin-bottom:1rem" id="t-estim">Estimation du projet</h3>
+        <div id="devis-lines"></div>
+        <div class="devis-total" id="devis-total"></div>
+        <div class="devis-sub" id="devis-sub">Estimation indicative — contactez-nous pour un devis précis.</div>
+      </div>
+      <div class="ai-box" id="ai-box">
+        <div class="ai-box-tag">✦ ANALYSE IA</div>
+        <div id="ai-text"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <h2 id="t-contact">Contact</h2>
+      <div class="accent-bar"></div>
+      <p id="t-contact-p">Besoin d'un site sur mesure ? Parlons-en.</p>
+    </div>
+    <div class="contact-wrap reveal">
+      <div class="contact-grid">
+        <div class="input-wrap"><input type="text" id="c-name" placeholder="Votre nom *"></div>
+        <div class="input-wrap"><input type="email" id="c-email" placeholder="Votre email *"></div>
+        <div class="input-wrap"><input type="tel" id="c-phone" placeholder="Téléphone (WhatsApp)"></div>
+        <div class="input-wrap">
+          <select id="c-service" style="color:var(--muted)">
+            <option value="">Service souhaité</option>
+            <option>Conception UX/UI</option>
+            <option>Développement Front-end</option>
+            <option>Développement Back-end</option>
+            <option>Maintenance &amp; Hébergement</option>
+          </select>
+        </div>
+        <div class="input-wrap full"><textarea id="c-msg" placeholder="Votre message *"></textarea></div>
+      </div>
+      <button class="btn btn-primary" onclick="envoyerContact()" id="btn-contact">Envoyer le message</button>
+      <p class="feedback" id="contact-fb"></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
       <div>
         <h3>NDIAYE-TECH</h3>
-        <p>Création de site, développement web & maintenance.</p>
+        <p>Création de site, développement web &amp; maintenance au Sénégal.</p>
       </div>
       <div>
-        <h4>Contact</h4>
+        <h4 id="f-contact">Contact</h4>
         <p>Email : sn871510@gmail.com</p>
-        <p>Téléphone : +221 772198512</p>
+        <p>Tél : +221 772 198 512</p>
+        <p>Dakar, Sénégal</p>
       </div>
       <div>
-        <h4>Réseaux</h4>
-        <p><a href="#">LinkedIn</a> • <a href="#">Facebook</a></p>
+        <h4 id="f-reseaux">Réseaux</h4>
+        <a href="#">LinkedIn</a>
+        <a href="#">Facebook</a>
+        <a href="https://wa.me/221772198512">WhatsApp</a>
       </div>
     </div>
     <p class="copyright">© 2026 NDIAYE-TECH. Tous droits réservés.</p>
-  </footer>
+  </div>
+</footer>
 
-  <script src="script.js"></script>
+<!-- CHATBOT -->
+<div class="chatbot-wrap">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-head">
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-head-info">
+        <div class="chat-head-name">Assistant NDIAYE-TECH</div>
+        <div class="chat-head-status">● En ligne — IA activée</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="quick-chips" id="quick-chips">
+      <button class="chip" onclick="quickSend('Quels sont vos services ?')">Vos services ?</button>
+      <button class="chip" onclick="quickSend('Combien coûte un site ?')">Tarifs ?</button>
+      <button class="chip" onclick="quickSend('Quels sont les délais ?')">Délais ?</button>
+      <button class="chip" onclick="quickSend('Comment vous contacter ?')">Contact ?</button>
+    </div>
+    <div class="chat-input-row">
+      <input id="chat-input" type="text" placeholder="Posez votre question…" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()" id="chat-btn" title="Assistant IA">💬</button>
+</div>
+
+<script>
+/* ── LOADER ────────────────────────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1500);
+});
+
+/* ── PARTICLES ─────────────────────────────────────────────────────────── */
+(function spawnParticles(){
+  const c = document.getElementById('particles-container');
+  c.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden';
+  for(let i = 0; i < 22; i++){
+    const p = document.createElement('div');
+    const size = Math.random()*3+1;
+    const colors = ['rgba(0,212,255,.5)','rgba(108,99,255,.4)','rgba(167,139,250,.35)'];
+    p.className = 'particle';
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*-10}%;
+      animation-duration:${6+Math.random()*8}s;
+      animation-delay:${Math.random()*6}s;
+    `;
+    c.appendChild(p);
+  }
+})();
+
+/* ── SCROLL REVEAL ─────────────────────────────────────────────────────── */
+const revealObs = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal,.stat-item').forEach(el => revealObs.observe(el));
+
+/* ── STATS COUNTER ──────────────────────────────────────────────────────── */
+const TARGETS = { s1:50, s2:80, s3:5, s4:20 };
+let counted = false;
+const statsObs = new IntersectionObserver(es => {
+  if(counted) return;
+  if(es.some(e => e.isIntersecting)){
+    counted = true;
+    Object.entries(TARGETS).forEach(([id, target]) => {
+      let n = 0; const step = Math.ceil(target / 40);
+      const t = setInterval(() => {
+        n = Math.min(n + step, target);
+        document.getElementById(id).textContent = n + (id === 's3' ? '' : '+');
+        if(n >= target) clearInterval(t);
+      }, 45);
+    });
+  }
+}, { threshold: .3 });
+document.querySelector('.stats-strip').querySelectorAll('.stat-item').forEach(el => statsObs.observe(el));
+
+/* ── LANGUE ─────────────────────────────────────────────────────────────── */
+const I18N = {
+  fr: {
+    'hero-badge':'✦ Agence Web Sénégalaise',
+    'hero-sub':'Création de plateformes numériques, conception, développement et réalisation de site Web.',
+    'btn-devis-cta':'✦ Devis IA gratuit','btn-portfolio-cta':'Voir nos projets',
+    'sl1':'Projets livrés','sl2':'Clients satisfaits','sl3':'Années d\'expérience','sl4':'Technologies',
+    't-services':'Nos services','t-services-p':'Des solutions web sur mesure pour votre business',
+    's1-t':'Conception UX/UI','s1-p':'Maquettes modernes et expérience utilisateur optimisée pour convertir vos visiteurs.',
+    's2-t':'Développement Front-end','s2-p':'HTML/CSS/JS réactif, performance mobile et animation fluide.',
+    's3-t':'Développement Back-end','s3-p':'API sécurisées, CMS, base de données et déploiement scalable.',
+    's4-t':'Maintenance & Hébergement','s4-p':'Supervision, sauvegarde et support continu pour vos projets en production.',
+    't-portfolio':'Portfolio','t-testi':'Témoignages',
+    't-devis':'Générateur de devis','t-devis-p':'Estimation instantanée + analyse IA de votre projet',
+    'l-type':'Type de projet','l-pages':'Nombre de pages','l-feats':'Fonctionnalités souhaitées',
+    'l-delai':'Délai souhaité','l-budget':'Budget estimé (FCFA)','l-desc':'Décrivez votre projet',
+    'btn-gen':'✦ Générer le devis IA','t-estim':'Estimation du projet',
+    'devis-sub':'Estimation indicative — contactez-nous pour un devis précis.',
+    't-contact':'Contact','t-contact-p':'Besoin d\'un site sur mesure ? Parlons-en.',
+    'btn-contact':'Envoyer le message','f-contact':'Contact','f-reseaux':'Réseaux',
+  },
+  en: {
+    'hero-badge':'✦ Senegalese Web Agency',
+    'hero-sub':'Creating digital platforms, design, development and delivery of websites.',
+    'btn-devis-cta':'✦ Free AI quote','btn-portfolio-cta':'See our projects',
+    'sl1':'Projects delivered','sl2':'Happy clients','sl3':'Years of experience','sl4':'Technologies',
+    't-services':'Our services','t-services-p':'Tailored web solutions for your business',
+    's1-t':'UX/UI Design','s1-p':'Modern mockups and optimized user experience to convert your visitors.',
+    's2-t':'Front-end Development','s2-p':'Responsive HTML/CSS/JS, mobile performance and smooth animations.',
+    's3-t':'Back-end Development','s3-p':'Secure APIs, CMS, database and scalable deployment.',
+    's4-t':'Maintenance & Hosting','s4-p':'Monitoring, backup and continuous support for your production projects.',
+    't-portfolio':'Portfolio','t-testi':'Testimonials',
+    't-devis':'Quote generator','t-devis-p':'Instant estimate + AI analysis of your project',
+    'l-type':'Project type','l-pages':'Number of pages','l-feats':'Desired features',
+    'l-delai':'Desired timeline','l-budget':'Estimated budget (FCFA)','l-desc':'Describe your project',
+    'btn-gen':'✦ Generate AI quote','t-estim':'Project estimate',
+    'devis-sub':'Indicative estimate — contact us for a precise quote.',
+    't-contact':'Contact','t-contact-p':'Need a custom site? Let\'s talk.',
+    'btn-contact':'Send message','f-contact':'Contact','f-reseaux':'Social',
+  },
+  wo: {
+    'hero-badge':'✦ Agence Web bu Senegaal',
+    'hero-sub':'Def dëkk yu numu web, design, développement ak réalisation yu sit web.',
+    'btn-devis-cta':'✦ Laaj devis IA','btn-portfolio-cta':'Xool proyets yi',
+    'sl1':'Proyets dox ak','sl2':'Clients yaamu','sl3':'Anni xam-xam','sl4':'Teknoloji yi',
+    't-services':'Sërvisu yi','t-services-p':'Solutionu web ci nit ku jiitu',
+    's1-t':'Conception UX/UI','s1-p':'Maquettes yu rafet ak expérience bu baax ngir liggéey.',
+    's2-t':'Développement Front-end','s2-p':'HTML/CSS/JS bu bind ci mobayl ak animation.',
+    's3-t':'Développement Back-end','s3-p':'API, CMS, base de données ak déploiement.',
+    's4-t':'Maintenance & Hébergement','s4-p':'Xam-xam, yëgël ak jàpp ak proyets yi.',
+    't-portfolio':'Portfolio','t-testi':'Témoignages',
+    't-devis':'Générateur de devis IA','t-devis-p':'Jël estimation bi ak analyse IA',
+    'l-type':'Xeetu projet','l-pages':'Jëmbaay page yi','l-feats':'Fonctionnalité yi',
+    'l-delai':'Délai','l-budget':'Budget (FCFA)','l-desc':'Décrire projet bi',
+    'btn-gen':'✦ Génér devis IA','t-estim':'Estimation projet bi',
+    'devis-sub':'Estimation — yëngël ngir devis bu dëgër.',
+    't-contact':'Yëngël','t-contact-p':'Dëkk sit web ? Wax leen.',
+    'btn-contact':'Yónnee message bi','f-contact':'Yëngël','f-reseaux':'Réseaux',
+  }
+};
+function setLang(lang, btn){
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = I18N[lang];
+  Object.entries(d).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = val;
+  });
+}
+
+/* ── DEVIS GENERATOR ────────────────────────────────────────────────────── */
+const PRIX = {
+  type:  { vitrine:150000, ecommerce:400000, saas:700000, mobile:600000, api:350000 },
+  pages: { 1:0, 2:50000, 3:120000 },
+  feat:  { auth:80000, payment:120000, chat:100000, seo:60000, api:90000, admin:110000 },
+  delai: { urgent:1.3, normal:1, flex:.9 }
+};
+const TYPE_NOM = { vitrine:'Site vitrine', ecommerce:'E-commerce', saas:'Application SaaS', mobile:'App mobile', api:'API / Back-end' };
+
+async function genererDevis(){
+  const type = document.getElementById('d-type').value;
+  if(!type){ alert('Veuillez sélectionner un type de projet.'); return; }
+  const pages = +document.getElementById('d-pages').value;
+  const delai = document.getElementById('d-delai').value;
+  const desc  = document.getElementById('d-desc').value.trim();
+  const feats = [...document.querySelectorAll('.feat:checked')].map(f=>f.value);
+
+  const base   = PRIX.type[type];
+  const pagesP = PRIX.pages[pages];
+  const featsP = feats.reduce((s,f)=>s+PRIX.feat[f], 0);
+  const coeff  = PRIX.delai[delai];
+  const sous   = base + pagesP + featsP;
+  const majoration = Math.round(sous*(coeff-1));
+  const total  = Math.round(sous * coeff);
+
+  const lines = [
+    { l: 'Base — ' + TYPE_NOM[type], p: base },
+    { l: 'Pages supplémentaires', p: pagesP },
+    { l: 'Fonctionnalités spécifiques', p: featsP },
+    { l: 'Ajustement délai (' + delai + ')', p: majoration },
+  ].filter(x => x.p !== 0);
+
+  const box = document.getElementById('devis-result');
+  document.getElementById('devis-lines').innerHTML = lines.map(l =>
+    `<div class="devis-row"><span class="label">${l.l}</span><span>${l.p.toLocaleString('fr-FR')} FCFA</span></div>`
+  ).join('') + `<div class="devis-row" style="font-weight:700;font-size:15px;color:var(--text)"><span>TOTAL</span><span style="color:var(--accent)">${total.toLocaleString('fr-FR')} FCFA</span></div>`;
+  document.getElementById('devis-total').textContent = '';
+  box.classList.add('show');
+  box.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  // AI Analysis
+  const aiBox = document.getElementById('ai-box');
+  const aiText = document.getElementById('ai-text');
+  aiBox.classList.add('show');
+  aiText.innerHTML = '<span class="ai-typing">Analyse en cours</span>';
+
+  const prompt = `Tu es un expert en développement web sénégalais. Un client soumet ce projet : type="${TYPE_NOM[type]}", fonctionnalités="${feats.join(', ')||'aucune sélectionnée'}", délai="${delai}", budget total estimé=${total.toLocaleString('fr-FR')} FCFA. Description : "${desc||'non renseignée'}". Fournis une analyse professionnelle en 4 points : 1) Stack technologique recommandée, 2) Points de vigilance, 3) Avis sur le budget, 4) Conseil pour réussir le projet. Sois concis et direct, maximum 5 lignes.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role:'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b=>b.text||'').join('') || '';
+    aiText.textContent = reply || fallbackAnalysis(type, feats, total);
+  } catch(e) {
+    aiText.textContent = fallbackAnalysis(type, feats, total);
+  }
+}
+
+function fallbackAnalysis(type, feats, total){
+  const stacks = { vitrine:'HTML/CSS + WordPress ou Webflow', ecommerce:'WooCommerce ou Shopify + PHP', saas:'Django/Node.js + React + PostgreSQL', mobile:'React Native ou Flutter', api:'Node.js / Django REST + PostgreSQL' };
+  return `Stack recommandée : ${stacks[type]||'selon le besoin'}. ${feats.includes('payment') ? 'L\'intégration paiement nécessite une attention particulière (Wave, Orange Money). ' : ''}Budget de ${total.toLocaleString('fr-FR')} FCFA ${total < 300000 ? 'est adapté pour un projet simple.' : 'permet un développement de qualité.'}`;
+}
+
+/* ── CONTACT FORM ─────────────────────────────────────────────────────── */
+function envoyerContact(){
+  const name  = document.getElementById('c-name').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const msg   = document.getElementById('c-msg').value.trim();
+  const fb    = document.getElementById('contact-fb');
+  if(!name || !email || !msg){ fb.className='feedback err'; fb.textContent='Veuillez remplir les champs obligatoires (*).'; return; }
+  if(!/\S+@\S+\.\S+/.test(email)){ fb.className='feedback err'; fb.textContent='Adresse email invalide.'; return; }
+  fb.className='feedback ok';
+  fb.textContent='✓ Message envoyé ! Nous vous répondrons dans les 24h.';
+  ['c-name','c-email','c-phone','c-msg'].forEach(id => document.getElementById(id).value = '');
+}
+
+/* ── CHATBOT ─────────────────────────────────────────────────────────── */
+let chatOpen = false;
+let chatHistory = [];
+const LOCAL_KB = {
+  'service':    'Nous proposons : Conception UX/UI, Développement Front-end & Back-end, Applications mobiles et Maintenance & Hébergement.',
+  'tarif':      'Nos prix débutent à 150 000 FCFA pour un site vitrine. Utilisez notre générateur de devis IA pour une estimation personnalisée !',
+  'prix':       'Nos prix débutent à 150 000 FCFA pour un site vitrine. Utilisez notre générateur de devis IA pour une estimation personnalisée !',
+  'délai':      'Site vitrine : 1-2 semaines. E-commerce : 3-6 semaines. Application web SaaS : 2-4 mois.',
+  'contact':    'Email : sn871510@gmail.com • Tél/WhatsApp : +221 772 198 512 • Dakar, Sénégal.',
+  'techno':     'Nous maîtrisons : HTML/CSS/JS, React, Vue.js, PHP, Python, Django, Node.js, MySQL, PostgreSQL, Flutter et plus encore.',
+  'whatsapp':   'Vous pouvez nous joindre sur WhatsApp au +221 772 198 512.',
+  'paiement':   'Nous acceptons les paiements par Wave, Orange Money et virement bancaire.',
+};
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const btn = document.getElementById('chat-btn');
+  win.classList.toggle('open', chatOpen);
+  btn.textContent = chatOpen ? '✕' : '💬';
+  if(chatOpen && document.getElementById('chat-msgs').children.length === 0){
+    addBotMsg('Bonjour 👋 Je suis l\'assistant IA de NDIAYE-TECH. Comment puis-je vous aider ?');
+  }
+}
+
+function addMsg(text, type){
+  const m = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg ' + type;
+  d.textContent = text;
+  m.appendChild(d);
+  m.scrollTop = m.scrollHeight;
+  return d;
+}
+function addBotMsg(text){ return addMsg(text,'bot'); }
+
+function showTyping(){
+  const m = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg bot'; d.id = 'typing';
+  d.innerHTML = '<div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  m.appendChild(d); m.scrollTop = m.scrollHeight;
+}
+function removeTyping(){ document.getElementById('typing')?.remove(); }
+
+function quickSend(text){ document.getElementById('chat-input').value = text; sendChat(); }
+
+async function sendChat(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  addMsg(text, 'user');
+  chatHistory.push({ role:'user', content:text });
+  document.getElementById('quick-chips').style.display = 'none';
+  showTyping();
+
+  // Local KB check
+  const lower = text.toLowerCase();
+  for(const [key, val] of Object.entries(LOCAL_KB)){
+    if(lower.includes(key)){
+      setTimeout(() => { removeTyping(); addBotMsg(val); chatHistory.push({role:'assistant',content:val}); }, 700);
+      return;
+    }
+  }
+
+  // Call AI
+  try {
+    const sys = 'Tu es l\'assistant IA de NDIAYE-TECH, agence web basée à Dakar, Sénégal. Réponds en français, de manière amicale et professionnelle en 2-3 phrases max. Infos : services (UX/UI, Front-end, Back-end, Mobile, Maintenance), tarifs dès 150 000 FCFA, contact sn871510@gmail.com / +221 772 198 512, paiements Wave & Orange Money acceptés.';
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: sys,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b=>b.text||'').join('') || '';
+    removeTyping();
+    if(reply){ addBotMsg(reply); chatHistory.push({role:'assistant',content:reply}); }
+    else throw '';
+  } catch(e) {
+    removeTyping();
+    const fb = ['N\'hésitez pas à nous contacter au +221 772 198 512 !',
+                'Je suis là pour vous aider. Posez-moi vos questions sur nos services.',
+                'Vous pouvez aussi utiliser notre formulaire de contact pour un échange détaillé.'];
+    const r = fb[Math.floor(Math.random()*fb.length)];
+    addBotMsg(r); chatHistory.push({role:'assistant',content:r});
+  }
+}
+</script>
 </body>
 </html>
